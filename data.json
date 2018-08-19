@@ -1,4 +1,11 @@
 {
-    "firstName": "Tiger",
-    "lastName": "Chen"
+    "family":[
+    {
+        "firstName": "Tiger",
+        "lastName": "Chen"
+    },
+    {
+        "firstName": "Cherie",
+        "lastName": "Liu"
+    }]
 }
