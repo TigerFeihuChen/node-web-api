@@ -2,35 +2,32 @@
 
 const http = require('http');
 const fs = require('fs');
+const express = require('express');
 
-http.createServer(function(req, res) {
-    console.log('Request for ' + req.url + ' by method ' + req.method);
+const port = process.env.PORT || 3000;
+const server = express();
 
-    if(req.method === 'GET') {
-        res.writeHead(200, { 'conten-type': 'text/html' });
-        fs.createReadStream(__dirname + '/404.html').pipe(res);
-    }
+server.get('/', (req, res) => {
+    res.send('Hello World!');
+});
 
+server.get('/api/:name', (req, res) => {
     let dataPath;
-    if(req.method === 'GET' && req.url.startsWith('/api/')) {
-        res.writeHead(200, { 'conten-type': 'application/json' });
-    
-        switch(req.url.replace('/api/', '')) {
-            case 'family':
-                dataPath = '/data/family.json';
-                break;
-            case 'friends' :
-                dataPath = '/data/friends.json';
-                break;
-            default:
-                dataPath = '/data/default.json';
-                break;
-        }
-        
-        fs.createReadStream(__dirname + dataPath).pipe(res);
+    switch(req.params['name']) {
+        case 'family':
+            dataPath = '/data/family.json';
+            break;
+        case 'friends' :
+            dataPath = '/data/friends.json';
+            break;
+        default:
+            dataPath = '/data/default.json';
+            break;
     }
 
-    // res.writeHead(404);
-    // res.end();
-    
-}).listen(3000, '127.0.0.1');
+    fs.createReadStream(__dirname + dataPath).pipe(res);
+});
+
+server.listen(port, () => {
+    console.log('Start server at ' + port);
+});
